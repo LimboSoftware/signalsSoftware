@@ -3,6 +3,7 @@
 const $ = id => document.getElementById(id);
 const API="/api/drive";
 const tabLimit=20;
+let pendingImportedChromeTabs=null;
 const state={presets:[],sessions:[],selectedId:"",selectedSessionId:"",selectedEditId:"",hostPassword:"",studentToken:"",studentSessionId:"",turnstileToken:"",turnstileWidget:null,config:null,pending:[],uploading:false};
 const show=(id,on)=>$(id).classList.toggle("hidden",!on);
 const say=(id,content,err=false)=>{const el=$(id);el.textContent=content;el.style.color=err?"#ffd0c8":"";};
@@ -318,6 +319,15 @@ async function refreshHost(){
    state.draft={name:findPreset(state.selectedEditId).name,links:findPreset(state.selectedEditId).links.map(x=>({...x}))};
    $("preset-name").value=state.draft.name;editorRows();
   }else blankPreset();
+  if(pendingImportedChromeTabs){
+   state.selectedEditId="";
+   state.draft={name:"Imported Chrome workshop",links:pendingImportedChromeTabs.map(url=>({title:"",url}))};
+   $("preset-picker").value="";
+   $("preset-name").value=state.draft.name;
+   editorRows();
+   pendingImportedChromeTabs=null;
+   say("save-message","Chrome tabs imported. Name the preset and press Save to Google Drive.");
+  }
   renderSessions();
   say("host-message","Connected to your Google Drive workshop folder.");
  }catch(e){
@@ -374,7 +384,38 @@ function renderSessions(){
   box.append(card);
  });
 }
+async function copyToClipboard(value){
+ try{await navigator.clipboard.writeText(value);}
+ catch{
+  const textarea=document.createElement("textarea");
+  textarea.value=value;textarea.style.position="fixed";textarea.style.opacity="0";
+  document.body.append(textarea);textarea.select();
+  const ok=document.execCommand("copy");textarea.remove();
+  if(!ok)throw Error("Clipboard permission blocked.");
+ }
+}
+$("capture-tabs").onclick=async()=>{
+ const start=location.origin+location.pathname;
+ const script='var c=Application("Google Chrome");var w=c.windows();if(!w.length)throw Error("Open Chrome first.");var u=w[0].tabs().map(function(t){return t.url()}).filter(function(v){return (v.indexOf("https://")===0||v.indexOf("http://")===0)&&v.indexOf('+JSON.stringify(start)+')!==0;}).slice(0,20);if(!u.length)throw Error("No website tabs in the front Chrome window.");var dest='+JSON.stringify(start+"?import=")+'+encodeURIComponent(JSON.stringify(u));c.windows[0].tabs.push(new c.Tab({url:dest}));';
+ const command="osascript -l JavaScript -e '"+script.replace(/'/g,"'\\''")+"'";
+ try{
+  await copyToClipboard(command);
+  say("save-message","Command copied. Open macOS Terminal, paste and press Return. Allow access to Chrome if prompted.");
+ }catch(e){say("save-message",e.message,true)}
+};
 async function init(){
+ const query=new URLSearchParams(location.search);
+ if(query.has("import")){
+  try{
+   const links=JSON.parse(query.get("import"));
+   if(!Array.isArray(links)||!links.length)throw Error("No tabs were imported.");
+   pendingImportedChromeTabs=links.slice(0,20).filter(url=>typeof url==="string"&&/^https?:\/\//.test(url));
+   showView(true);
+   say("host-message","Chrome tabs captured. Enter your host password to load them into a preset.");
+  }catch(e){say("host-message","Chrome import failed: "+e.message,true)}
+  history.replaceState(null,"",location.pathname);
+ }
+
  blankPreset();
  await loadConfig();
  await refreshStudent();
