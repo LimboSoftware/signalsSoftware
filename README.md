@@ -4,9 +4,26 @@ A host chooses up to three workshop URLs; students on other MacBooks join a shar
 
 This repository is independent of Tabletop Voice, ArmyTag and other tabletop projects.
 
+## Quick test using GitHub Pages (no Cloudflare needed)
+
+This repository now includes a standalone, static test version in **`docs/index.html`**.
+
+**Enable it once:**
+
+1. Open [Repository Settings > Pages](https://github.com/LimboSoftware/signalsSoftware/settings/pages).
+2. Under **Build and deployment**, choose **Deploy from a branch**.
+3. Select **`main`** and **`/docs`**, then click **Save**.
+4. Open **https://limbosoftware.github.io/signalsSoftware/** once GitHub finishes publishing.
+
+On the host Mac, enter your three website URLs, click **Create student link** and **Copy student link**, then share that URL with all MacBooks. Each student opens the shared link and clicks **Open all workshop tabs**. Chrome may ask to allow multiple pop-ups.
+
+The host can optionally copy a Mac Terminal command from the page to import Chrome's first three website tabs. You can always paste URLs manually.
+
+**Important limitation:** GitHub Pages is static. The selected URLs are embedded in the student link; to change them you must generate and share a new link. There are no live room codes or automatic remote updates in this test version. The Cloudflare implementation below remains available for that later.
+
 ## Deployment status
 
-**The code is on GitHub; the live site is not yet deployed.** GitHub Pages alone cannot run the room-sync API or database. A GitHub Actions workflow is included to deploy everything to **Cloudflare Workers + D1**, after a one-time Cloudflare setup.
+**The static GitHub Pages test is in `docs/`.** The full live-sync version requires separate deployment. GitHub Pages alone cannot run the room-sync API or database. A GitHub Actions workflow is included to deploy everything to **Cloudflare Workers + D1**, after a one-time Cloudflare setup.
 
 ## Deploy using GitHub (no Terminal required)
 
