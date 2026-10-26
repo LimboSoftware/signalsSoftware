@@ -1,3 +1,28 @@
 {
-  "presets": []
+  "presets": [
+    {
+      "slug": "demo-4-tabs-replace-with-your-workshop",
+      "name": "Demo (4 tabs) — replace with your workshop",
+      "links": [
+        {
+          "title": "Example website",
+          "url": "https://example.com/"
+        },
+        {
+          "title": "Wikipedia",
+          "url": "https://www.wikipedia.org/"
+        },
+        {
+          "title": "OpenStreetMap",
+          "url": "https://www.openstreetmap.org/"
+        },
+        {
+          "title": "BBC Bitesize",
+          "url": "https://www.bbc.co.uk/bitesize"
+        }
+      ],
+      "updatedAt": "2026-10-26T10:37:00.388Z",
+      "issueNumber": 1
+    }
+  ]
 }
