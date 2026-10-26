@@ -67,15 +67,17 @@
 <div class="divider"></div>
 <div class="flex">
 <button id="publish" class="btn">Publish preset to GitHub ↗</button>
+<button id="new-preset" class="btn secondary hidden">+ New preset</button>
+<button id="delete-preset" class="btn secondary hidden">Delete selected preset</button>
 <button id="test" class="btn secondary">Test opening tabs here ↗</button>
 </div>
 <p class="status" id="host-status" role="status"></p>
 <div id="host-warning" class="top-alert hidden"></div>
 </div>
 <div class="section">
-<h2>How publishing works</h2>
-<p class="steps">Press <strong>Publish preset to GitHub</strong>. You'll see a new GitHub Issue with your preset already filled in. Sign in as the repository owner and press <strong>Create</strong> on GitHub. The repository automatically publishes the preset onto this homepage. Students never need GitHub accounts. It may take a short while for GitHub Pages to rebuild.</p>
-<p class="steps">For changes, publish the same preset name again. This updates the button on the student homepage.</p>
+<h2 id="help-title">How publishing works</h2>
+<p class="steps" id="help-primary">Press <strong>Publish preset to GitHub</strong>. You'll see a new GitHub Issue with your preset already filled in. Sign in as the repository owner and press <strong>Create</strong> on GitHub. The repository automatically publishes the preset onto this homepage. Students never need GitHub accounts. It may take a short while for GitHub Pages to rebuild.</p>
+<p class="steps" id="help-secondary">For changes, publish the same preset name again. This updates the button on the student homepage.</p>
 <div class="flex"><button id="copy-home" class="btn secondary">Copy student homepage address</button></div>
 </div>
 <p class="foot">This is a public GitHub Pages site. Workshop names and website URLs are public. Do not add links containing private tokens or sign-in credentials. Other GitHub users cannot publish a preset to the live catalogue.</p>
@@ -90,8 +92,10 @@ const LIMIT=20;
 const STORAGE='workshop-shared-host-draft-v2';
 const SITE=location.origin+location.pathname;
 const REPO='LimboSoftware/signalsSoftware';
+const cloudflareMode = location.protocol.startsWith('http') && !location.hostname.toLowerCase().endsWith('github.io');
+const PASS_STORAGE='workshop-host-password-session-v1';
 const bySlug=new Map();
-let draft={name:'',links:[{title:'',url:''},{title:'',url:''},{title:'',url:''}]};
+let draft={name:'',slug:null,links:[{title:'',url:''},{title:'',url:''},{title:'',url:''}]};
 function status(id,content,error=false){$(id).textContent=content;$(id).classList.toggle('error',error);}
 function showHost(){ $('student').classList.add('hidden');$('host').classList.remove('hidden');window.scrollTo(0,0);}
 function showStudent(){ $('host').classList.add('hidden');$('student').classList.remove('hidden');window.scrollTo(0,0);refresh();}
@@ -183,14 +187,14 @@ function displayPreset(p){
  const download=document.createElement('button');download.className='btn secondary';download.textContent='Download bookmarks';
  download.addEventListener('click',()=>downloadBookmarks(p));
  const edit=document.createElement('button');edit.className='btn ghost tiny-button';edit.textContent='Edit as host';
- edit.addEventListener('click',()=>{draft={name:p.name,links:p.links.map(x=>({...x}))};persist();fill();showHost();status('host-status','Preset loaded. Change the tabs, then publish using the same name.');});
+ edit.addEventListener('click',()=>{draft={name:p.name,slug:p.slug,links:p.links.map(x=>({...x}))};persist();fill();showHost();status('host-status','Preset loaded. Change the tabs, then publish using the same name.');});
  actions.append(open,download,edit);card.append(info,actions);
  return card;
 }
 async function refresh(){
  $('refresh').disabled=true;$('preset-count').textContent='Loading…';
  try{
-  const response=await fetch('./presets/index.json?revision='+Date.now(),{cache:'no-store'});
+  const response=await fetch(cloudflareMode?'/api/presets?revision='+Date.now():'./presets/index.json?revision='+Date.now(),{cache:'no-store'});
   if(!response.ok)throw Error('Could not load preset catalogue (HTTP '+response.status+').');
   const data=await response.json();
   if(!Array.isArray(data.presets))throw Error('Preset catalogue has an unexpected format.');
@@ -240,7 +244,7 @@ $('capture').addEventListener('click',async()=>{
 });
 try{
  const prev=JSON.parse(localStorage.getItem(STORAGE)||'null');
- if(prev&&Array.isArray(prev.links)){draft={name:String(prev.name||''),links:prev.links.slice(0,LIMIT)};}
+ if(prev&&Array.isArray(prev.links)){draft={name:String(prev.name||''),slug:typeof prev.slug==='string'?prev.slug:null,links:prev.links.slice(0,LIMIT)};}
 }catch{}
 fill();
 const query=new URLSearchParams(location.search);
