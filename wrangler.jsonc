@@ -1,0 +1,16 @@
+{
+  "name": "workshop-tab-launcher",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-10-25",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "workshop-tab-launcher-db",
+      "database_id": "PASTE_DATABASE_ID_HERE"
+    }
+  ]
+}
