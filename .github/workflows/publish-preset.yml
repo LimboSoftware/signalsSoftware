@@ -1,0 +1,75 @@
+name: Publish workshop preset
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: workshop-preset-updates
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.issue.user.login == 'LimboSoftware'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate and publish host preset
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const marker = '<!-- WORKSHOP_PRESET_V1 -->';
+            if (!issue.body || !issue.body.includes(marker)) {
+              core.info('Not a workshop preset issue; skipping.');
+              return;
+            }
+            if (issue.body.length > 16000) throw new Error('Preset body is too long.');
+            const match = issue.body.match(/<!-- WORKSHOP_PRESET_V1 -->\s*```json\s*([\s\S]*?)\s*```/i);
+            if (!match) throw new Error('Could not find the preset JSON.');
+            const incoming = JSON.parse(match[1]);
+            if (!incoming || incoming.version !== 1 || typeof incoming.name !== 'string' || !Array.isArray(incoming.links)) throw new Error('Invalid preset.');
+            const name = incoming.name.trim().slice(0, 80);
+            if (!name) throw new Error('Enter a preset name.');
+            if (incoming.links.length < 1 || incoming.links.length > 20) throw new Error('Presets can contain 1–20 tabs.');
+            const links = incoming.links.map((entry, i) => {
+              if (!entry || typeof entry.url !== 'string' || entry.url.length > 2048) throw new Error('Invalid URL in tab ' + (i+1));
+              const url = new URL(entry.url.trim());
+              if (!['https:', 'http:'].includes(url.protocol) || !url.hostname || url.username || url.password) throw new Error('Not a normal website URL in tab ' + (i+1));
+              return { title: String(entry.title || 'Page ' + (i+1)).trim().slice(0,80), url: url.toString() };
+            });
+            const slug = name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0,64) || 'workshop';
+            const newItem = { slug, name, links, updatedAt: new Date().toISOString(), issueNumber: issue.number };
+            const { owner, repo } = context.repo;
+            async function getIndex(path) {
+              try {
+                const file = await github.rest.repos.getContent({ owner, repo, path });
+                if (Array.isArray(file.data) || !file.data.content) throw new Error('Manifest is not a file.');
+                const json = JSON.parse(Buffer.from(file.data.content, 'base64').toString('utf8'));
+                return { sha: file.data.sha, items: Array.isArray(json.presets) ? json.presets : [] };
+              } catch (error) {
+                if (error.status === 404) return { sha: undefined, items: [] };
+                throw error;
+              }
+            }
+            async function saveIndex(path, manifest) {
+              let file;
+              try { file = await github.rest.repos.getContent({owner, repo, path}); }
+              catch (error) { if (error.status !== 404) throw error; }
+              await github.rest.repos.createOrUpdateFileContents({
+                owner, repo, path, branch: 'main',
+                message: 'Publish workshop preset: ' + name,
+                ...(file && !Array.isArray(file.data) ? {sha: file.data.sha} : {}),
+                content: Buffer.from(JSON.stringify({ presets: manifest },null,2) + '\n').toString('base64'),
+              });
+            }
+            const current = await getIndex('docs/presets/index.json');
+            const next = current.items.filter(p => p.slug !== slug);
+            next.unshift(newItem);
+            if (next.length > 40) next.length = 40;
+            await saveIndex('docs/presets/index.json',next);
+            await saveIndex('presets/index.json',next);
+            core.info('Published ' + name + ' with ' + links.length + ' tabs.');
