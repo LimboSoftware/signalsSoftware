@@ -1,6 +1,34 @@
 {
   "presets": [
     {
+      "slug": "daves-game-workshop",
+      "name": "Daves Game workshop",
+      "links": [
+        {
+          "title": "page 1",
+          "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        },
+        {
+          "title": "page 2",
+          "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        },
+        {
+          "title": "page 3",
+          "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        },
+        {
+          "title": "page 4",
+          "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        },
+        {
+          "title": "page 5",
+          "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        }
+      ],
+      "updatedAt": "2026-10-26T10:43:35.392Z",
+      "issueNumber": 2
+    },
+    {
       "slug": "demo-4-tabs-replace-with-your-workshop",
       "name": "Demo (4 tabs) — replace with your workshop",
       "links": [
