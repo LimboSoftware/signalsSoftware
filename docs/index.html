@@ -167,6 +167,16 @@ function openTabs(links,warningId,statusId){
  if(blocked)$(warningId).classList.remove('hidden');
  if(statusId)status(statusId,blocked?'Some tabs were blocked; check Chrome pop-up settings.':'Requested '+links.length+' tabs.',blocked>0);
 }
+async function getHostPassword(){
+ let password='';
+ try{password=sessionStorage.getItem(PASS_STORAGE)||'';}catch{}
+ if(!password){
+  password=window.prompt('Enter the HOST_PASSWORD configured in Cloudflare (12+ characters):')||'';
+  if(!password)return '';
+  try{sessionStorage.setItem(PASS_STORAGE,password);}catch{}
+ }
+ return password;
+}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function downloadBookmarks(p){
  const lines=['<!DOCTYPE NETSCAPE-Bookmark-file-1>','<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">','<TITLE>'+escapeHtml(p.name)+'</TITLE>','<H1>'+escapeHtml(p.name)+'</H1>','<DL><p>'];
@@ -195,7 +205,10 @@ async function refresh(){
  $('refresh').disabled=true;$('preset-count').textContent='Loading…';
  try{
   const response=await fetch(cloudflareMode?'/api/presets?revision='+Date.now():'./presets/index.json?revision='+Date.now(),{cache:'no-store'});
-  if(!response.ok)throw Error('Could not load preset catalogue (HTTP '+response.status+').');
+  if(!response.ok){
+   const failure=await response.json().catch(()=>({}));
+   throw Error(failure.error||'Could not load preset catalogue (HTTP '+response.status+').');
+  }
   const data=await response.json();
   if(!Array.isArray(data.presets))throw Error('Preset catalogue has an unexpected format.');
   const box=$('presets');box.replaceChildren();bySlug.clear();let count=0;
@@ -205,7 +218,7 @@ async function refresh(){
     box.append(displayPreset(p));count++;
    }catch{}
   }
-  if(!count){const empty=document.createElement('div');empty.className='empty';empty.textContent='No workshop presets published yet. Use “I’m the host” to add your first one. After publishing it on GitHub, it appears here for all MacBooks.';box.append(empty);}
+  if(!count){const empty=document.createElement('div');empty.className='empty';empty.textContent=cloudflareMode?'No presets yet. Select “I’m the host”, create a preset, and press Save preset. It will appear here automatically.':'No workshop presets published yet. Use “I’m the host” to add your first one. After publishing it on GitHub, it appears here for all MacBooks.';box.append(empty);}
   $('preset-count').textContent=count+' preset'+(count===1?'':'s');
   status('student-status',count?'Choose your workshop above.':'Ready for the host to publish the first preset.');
  }catch(e){
@@ -222,7 +235,31 @@ $('host-switch').addEventListener('click',showHost);
 $('back').addEventListener('click',showStudent);
 $('preset-name').addEventListener('input',pullValues);
 $('add-tab').addEventListener('click',()=>{addRow({title:'',url:''});pullValues();$('editor').lastElementChild.querySelector('.edit-url').focus();});
-$('publish').addEventListener('click',()=>{
+$('publish').addEventListener('click',async()=>{
+ if(cloudflareMode){
+  try{
+   const data=collect();
+   const password=await getHostPassword();
+   if(!password)return;
+   $('publish').disabled=true;
+   const response=await fetch('/api/presets',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Host-Password':password},
+    body:JSON.stringify({...data,slug:draft.slug||undefined})
+   });
+   const result=await response.json().catch(()=>({error:'Unexpected server response.'}));
+   if(!response.ok){
+    if(response.status===401)sessionStorage.removeItem(PASS_STORAGE);
+    throw Error(result.error||'Save failed.');
+   }
+   draft.slug=result.preset.slug;persist();
+   status('host-status','Preset saved! Students can now see it on every MacBook.');
+   await refresh();
+  }catch(e){status('host-status','Could not save: '+e.message,true);}
+  finally{$('publish').disabled=false;}
+  return;
+ }
+
  try{
   const data=collect();
   const body='<!-- WORKSHOP_PRESET_V1 -->\n'+'\x60\x60\x60json\n'+JSON.stringify({version:1,...data},null,2)+'\n\x60\x60\x60\n\nPreset published from Workshop Tab Launcher. This issue triggers automatic publication to GitHub Pages.';
@@ -234,6 +271,30 @@ $('publish').addEventListener('click',()=>{
   const a=document.createElement('a');a.href=issue.href;a.target='_blank';a.rel='noopener noreferrer';a.click();
   const warn=$('host-warning');warn.textContent='GitHub should open with the preset prefilled. Sign in as LimboSoftware and click Create to publish it. Then return here and refresh presets on the student homepage. If GitHub was blocked, allow the new tab or try again.';warn.classList.remove('hidden');
  }catch(e){status('host-status',e.message,true);}
+});
+$('new-preset').addEventListener('click',()=>{
+ draft={name:'',slug:null,links:[{title:'',url:''},{title:'',url:''},{title:'',url:''}]};
+ persist();fill();status('host-status','Ready to create a new preset.');
+});
+$('delete-preset').addEventListener('click',async()=>{
+ if(!draft.slug)return status('host-status','Load an existing preset first.',true);
+ if(!window.confirm('Delete this preset from every student MacBook?'))return;
+ const password=await getHostPassword();
+ if(!password)return;
+ try{
+  const response=await fetch('/api/presets',{method:'DELETE',
+   headers:{'Content-Type':'application/json','X-Host-Password':password},
+   body:JSON.stringify({slug:draft.slug})
+  });
+  const result=await response.json().catch(()=>({error:'Unexpected server response.'}));
+  if(!response.ok){
+   if(response.status===401)sessionStorage.removeItem(PASS_STORAGE);
+   throw Error(result.error||'Delete failed.');
+  }
+  draft={name:'',slug:null,links:[{title:'',url:''},{title:'',url:''},{title:'',url:''}]};
+  persist();fill();status('host-status','Preset deleted. Students will no longer see it.');
+  await refresh();
+ }catch(e){status('host-status','Could not delete: '+e.message,true);}
 });
 $('test').addEventListener('click',()=>{try{openTabs(collect().links,'host-warning','host-status');}catch(e){status('host-status',e.message,true);}});
 $('copy-home').addEventListener('click',async()=>{try{await copyText(SITE);status('host-status','Student homepage address copied.');}catch(e){status('host-status',e.message,true);}});
@@ -258,6 +319,15 @@ if(query.has('import')){
  history.replaceState(null,'',SITE);
 }
 $('public-url').textContent=SITE;
+if(cloudflareMode){
+ $('publish').textContent='Save preset';
+ $('new-preset').classList.remove('hidden');
+ $('delete-preset').classList.remove('hidden');
+ $('help-title').textContent='Cloudflare: save and sync instantly';
+ $('help-primary').textContent='Press Save preset. Enter your private host password the first time. Your preset is saved in Cloudflare immediately, without GitHub Issues or redeploying the website.';
+ $('help-secondary').textContent='Students see updates automatically. Load a preset using Edit as host, create another using + New preset, or remove one with Delete selected preset.';
+ setInterval(()=>{if(!$('student').classList.contains('hidden')&&!document.hidden)refresh();},10000);
+}
 refresh();
 })();
 </script>
