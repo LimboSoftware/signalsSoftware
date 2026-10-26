@@ -2,7 +2,7 @@
 
 **Project:** `LimboSoftware/signalsSoftware` (independent of Tabletop Voice and ArmyTag).  
 **Cloudflare deployment:** `signals`, connected to this GitHub repository.  
-**Drive folder already created:** [Signals Workshops](https://drive.google.com/drive/folders/1y1ULkovpDkJbMb2Iuix3cKAgUjP7uS6V).
+**Drive folder already created:** [Signals Workshops](https://drive.google.com/drive/u/0/my-drive).
 
 ## What is built
 
@@ -57,7 +57,7 @@ In `signals` → **Settings → Variables and Secrets**, add the following to yo
 | `GOOGLE_CLIENT_ID` | OAuth Desktop client ID | Secret |
 | `GOOGLE_CLIENT_SECRET` | OAuth client secret | Secret |
 | `GOOGLE_REFRESH_TOKEN` | Refresh token from local script | Secret |
-| `GOOGLE_DRIVE_ROOT_FOLDER_ID` | `1y1ULkovpDkJbMb2Iuix3cKAgUjP7uS6V` | Text variable |
+| `GOOGLE_DRIVE_ROOT_FOLDER_ID` | `PASTE_YOUR_SIGNALS_DRIVE_FOLDER_ID` | Text variable |
 | `HOST_PASSWORD` | Unique password with 12+ characters | Secret |
 | `UPLOAD_TOKEN_SECRET` | Random unique string with at least 32 characters; don't reuse your host password | Secret |
 | `TURNSTILE_SITE_KEY` | Cloudflare Turnstile widget site key for the Signals domain | Text variable |
@@ -82,7 +82,7 @@ Make sure the widget is configured for the production hostname and any preview h
 4. Start a session for that preset. Note its **six-character submission code**.
 5. On another computer or a private browser window, choose the same preset. Verify that **Open all workshop tabs** works (Chrome may require pop-up permission).
 6. Enter a **test student name**, the code, complete Turnstile and upload a small text file.
-7. Verify a session folder and student folder appear in the private [Signals Workshops Drive folder](https://drive.google.com/drive/folders/1y1ULkovpDkJbMb2Iuix3cKAgUjP7uS6V), with the file inside.
+7. Verify a session folder and student folder appear in the private [Signals Workshops Drive folder](https://drive.google.com/drive/u/0/my-drive), with the file inside.
 8. Then test a large ZIP/video (for example, 200 MB–1 GB) over a stable network and confirm the file fully arrives. An interrupted upload can be resumed by reselecting the same file in the same browser session.
 
 **Limits and security:** Max 20 completed files per student folder, default 10 GiB per file (configurable), 8 MiB chunks. Uploads require the session code and a human check, but these are not the same as personal accounts. Do not use this for confidential student records. Google applies its own Drive storage and daily upload limits. Closing a session prevents new uploads but an already-issued upload token may allow a previously started upload to finish for up to 24 hours.
