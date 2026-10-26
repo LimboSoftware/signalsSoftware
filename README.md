@@ -1,5 +1,34 @@
 # Workshop Tab Launcher
 
+## Cloudflare project `signals`: live shared presets
+
+This repo has two launch modes: **GitHub Pages static test** (existing GitHub Issue-based publishing) and **Cloudflare Pages with live D1** (direct, instant publishing without GitHub Issues).
+
+The Cloudflare Pages implementation is already committed to GitHub:
+
+- `functions/api/presets.js` — Pages Function API: list, save, update, and delete presets.
+- `public/index.html` and `docs/index.html` — automatically switch to the Cloudflare API when viewed on a non-`github.io` hostname.
+- `public/_routes.json` and `docs/_routes.json` — route only `/api/*` to the Pages Function.
+- No database migration is required: the first API request creates the table if it doesn't exist.
+
+### Complete the one-time Cloudflare Pages configuration
+
+These settings must be completed in the **Cloudflare dashboard**, because the GitHub connector alone cannot configure your Cloudflare account.
+
+1. In **Workers & Pages → signals**, verify **signals is a Pages project**, with Git integration pointing to `LimboSoftware/signalsSoftware` and the production branch set to `main`.
+2. Under **Builds / Build configuration**, set **Root directory** to repository root (usually blank), **Build command** to `exit 0`, and **Build output directory** to `public` (the `docs` folder works too).
+3. Under **Storage & databases → D1**, create a database, for example `signals-presets`.
+4. Back in **Workers & Pages → signals → Settings → Bindings**, add **D1 database** and set the **Variable name** exactly to `DB`. Select the new database. Save.
+5. In **Settings → Variables and Secrets**, add a **secret** (not a public variable) called `HOST_PASSWORD` with a strong unique password (at least 12 characters). The password must **not** go into GitHub or the repository.
+6. Trigger **Redeploy** on the latest production deployment after both the D1 binding and secret are saved. These bindings are applied on deployment.
+7. Open the `*.pages.dev` URL shown in the Cloudflare project. Press **I'm the host**, create your preset, and press **Save preset**. Enter the host password on first use. The student homepage automatically checks for updates every 10 seconds.
+
+**Test the API:** `https://<your-project-domain>/api/presets` should return `{"presets":[]}` before you create the first preset. If it reports a missing `DB` binding, revisit step 4. If you see a 404, verify the Pages project, the build output folder, and the `/functions` folder at the repository root.
+
+**Important:** If `signals` is a *Workers* project instead of a *Pages* project, the Pages Functions route won't deploy automatically. Confirm the project type before following these instructions. The legacy standalone Worker files in this repo were built for another deployment arrangement.
+
+**Security:** Anybody may read/open the shared workshop list, but saving/deleting requires the private host password. Anyone who learns that password can modify presets. Only share workshop URLs that are appropriate for the group; they are publicly visible to students.
+
 ## GitHub Pages — shared workshop presets
 
 **Open the live launcher:** https://limbosoftware.github.io/signalsSoftware/
