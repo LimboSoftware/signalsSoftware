@@ -168,8 +168,131 @@ async function route(req,env){
  }
  if(path==="/presets"&&req.method==="POST"){
   const rejected=await requireHost(req,env);if(rejected)return rejected;
-  const input=presetInput(await readBody(req));
-  return json({validated:input});
+  const input=await readBody(req);
+  const item=presetInput(input);
+  if(input.id){
+   const existing=await getMeta(token,String(input.id));
+   if(!existing.name.startsWith("SIGNALS_PRESET__")||!(existing.parents||[]).includes(env.GOOGLE_DRIVE_ROOT_FOLDER_ID))return error("Preset is outside the Signals folder.",403);
+   await saveText(token,existing.id,{version:1,...item});
+   await updateMeta(token,existing.id,{description:"Workshop links preset: "+item.name});
+   return json({ok:true,preset:{id:existing.id,...item}});
+  }
+  const id=crypto.randomUUID();
+  const created=await createMeta(token,{name:"SIGNALS_PRESET__"+id+".json",mimeType:"application/json",parents:[env.GOOGLE_DRIVE_ROOT_FOLDER_ID],description:"Workshop links preset: "+item.name});
+  try{await saveText(token,created.id,{version:1,...item});}
+  catch(e){await updateMeta(token,created.id,{trashed:true}).catch(()=>{});throw e;}
+  return json({ok:true,preset:{id:created.id,...item}},201);
+ }
+ if(path==="/presets"&&req.method==="DELETE"){
+  const rejected=await requireHost(req,env);if(rejected)return rejected;
+  const data=await readBody(req);
+  const old=await getMeta(token,String(data.id||""));
+  if(!old.name.startsWith("SIGNALS_PRESET__")||!(old.parents||[]).includes(env.GOOGLE_DRIVE_ROOT_FOLDER_ID))return error("Preset not found in Signals.",404);
+  await updateMeta(token,old.id,{trashed:true});
+  return json({ok:true});
+ }
+ if(path==="/sessions"&&req.method==="POST"){
+  const rejected=await requireHost(req,env);if(rejected)return rejected;
+  const b=await readBody(req);
+  const preset=await getMeta(token,String(b.presetId||""));
+  if(!preset.name.startsWith("SIGNALS_PRESET__")||!(preset.parents||[]).includes(env.GOOGLE_DRIVE_ROOT_FOLDER_ID))return error("Invalid preset.",403);
+  const title=safe(b.name)||"Workshop session";
+  const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const code=Array.from(crypto.getRandomValues(new Uint8Array(6)),v=>alphabet[v%alphabet.length]).join("");
+  const record={kind:"signals-session",presetId:preset.id,name:title,createdAt:new Date().toISOString(),status:"open",code};
+  const folder=await createMeta(token,{name:"SIGNALS_SESSION__"+crypto.randomUUID(),mimeType:FOLDER,parents:[env.GOOGLE_DRIVE_ROOT_FOLDER_ID],description:JSON.stringify(record)});
+  return json({ok:true,session:{id:folder.id,...record}},201);
+ }
+ if(path==="/sessions"&&req.method==="PATCH"){
+  const rejected=await requireHost(req,env);if(rejected)return rejected;
+  const b=await readBody(req);
+  const entry=await getMeta(token,String(b.id||""));
+  if(entry.mimeType!==FOLDER||!(entry.parents||[]).includes(env.GOOGLE_DRIVE_ROOT_FOLDER_ID)||!entry.name.startsWith("SIGNALS_SESSION__"))return error("Session not found.",404);
+  const original=JSON.parse(entry.description||"{}");
+  if(original.kind!=="signals-session")return error("Session not found.",404);
+  original.status=b.open===true?"open":"closed";
+  await updateMeta(token,entry.id,{description:JSON.stringify(original)});
+  return json({ok:true,session:{id:entry.id,...original}});
+ }
+ if(path==="/join"&&req.method==="POST"){
+  const b=await readBody(req);
+  const s=await activeSession(token,env,String(b.sessionId||""));
+  if(!passwordCode(b.code)||String(b.code).trim().toUpperCase()!==s.code)return error("Incorrect workshop submission code.",403);
+  if(b.presetId!==s.presetId)return error("Wrong workshop selected.",400);
+  if(!await turnstile(req,env,b.turnstileToken))return error("Complete the human verification to upload.",403);
+  const name=safe(b.studentName,70);
+  if(name.length<2||name.length>70)return error("Enter your name (2–70 characters).");
+  const folder=await createMeta(token,{name:"STUDENT__"+name+"__"+crypto.randomUUID().slice(0,8),mimeType:FOLDER,parents:[s.id],description:"Submitted work from "+name});
+  const sessionToken=await seal({purpose:"participant",sessionId:s.id,presetId:s.presetId,folderId:folder.id,exp:Date.now()+24*60*60*1000},env);
+  return json({ok:true,studentToken:sessionToken,studentName:name,sessionName:s.name});
+ }
+ if(path==="/upload/start"&&req.method==="POST"){
+  const b=await readBody(req);
+  const payload=await unseal(b.studentToken,env);
+  if(payload.purpose!=="participant")return error("Incorrect upload access.",403);
+  const session=await activeSession(token,env,payload.sessionId);
+  if(session.presetId!==payload.presetId)return error("Session mismatch.",403);
+  const folder=await getMeta(token,payload.folderId);
+  if(folder.mimeType!==FOLDER||!(folder.parents||[]).includes(session.id))return error("Submission folder mismatch.",403);
+  const name=safe(b.fileName,180);
+  const max=Number(env.MAX_UPLOAD_BYTES)||10*1024*1024*1024;
+  const size=Number(b.fileSize);
+  if(name.length<1||!Number.isSafeInteger(size)||size<1||size>max)return error("File missing or exceeds the configured size limit ("+Math.round(max/1024/1024)+" MB).");
+  const existing=await children(token,folder.id,25);
+  if(existing.length>=20)return error("Maximum 20 submitted files per student for this session.");
+  const mime=safe(b.fileType,100)||"application/octet-stream";
+  const initiate=await fetch(MEDIA+"?uploadType=resumable&fields=id,name,mimeType,size,webViewLink",{
+   method:"POST",
+   headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json; charset=UTF-8","X-Upload-Content-Type":mime,"X-Upload-Content-Length":String(size)},
+   body:JSON.stringify({name,mimeType:mime,parents:[folder.id],description:"Signals workshop upload: "+session.name}),
+   redirect:"manual"
+  });
+  if(!initiate.ok)throw Error("Unable to initialise Google Drive upload ("+initiate.status+").");
+  const sessionUrl=initiate.headers.get("Location");
+  if(!sessionUrl||!(new URL(sessionUrl).hostname==="www.googleapis.com"))throw Error("Google did not return a trusted upload session.");
+  const uploadToken=await seal({purpose:"upload",sessionUrl,size,sessionId:session.id,exp:Date.now()+24*60*60*1000},env);
+  return json({ok:true,uploadToken,chunkBytes:CHUNK});
+ }
+ if(path==="/upload/chunk"&&req.method==="PUT"){
+  const uploadToken=req.headers.get("x-upload-token");
+  const payload=await unseal(uploadToken,env);
+  if(payload.purpose!=="upload")return error("Incorrect upload token.",403);
+  const start=Number(req.headers.get("x-offset"));
+  if(!Number.isSafeInteger(start)||start<0||start>=payload.size)return error("Invalid upload offset.");
+  const length=Number(req.headers.get("content-length"));
+  if(Number.isFinite(length)&&length>CHUNK)return error("Upload chunk too large.",413);
+  const bytes=await req.arrayBuffer();
+  if(!bytes.byteLength||bytes.byteLength>CHUNK||start+bytes.byteLength>payload.size)return error("Invalid chunk length.");
+  if(start+bytes.byteLength<payload.size&&bytes.byteLength%(256*1024)!==0)return error("Non-final chunks must be multiples of 256 KiB.");
+  const response=await fetch(payload.sessionUrl,{method:"PUT",headers:{
+   "Authorization":"Bearer "+token,"Content-Type":"application/octet-stream",
+   "Content-Range":"bytes "+start+"-"+(start+bytes.byteLength-1)+"/"+payload.size
+  },body:bytes,redirect:"manual"});
+  if(response.status===308){
+   const match=(response.headers.get("Range")||"").match(/bytes=0-(\d+)/);
+   return json({complete:false,nextOffset:match?Number(match[1])+1:0});
+  }
+  if(response.ok){
+   let metadata={};try{metadata=await response.json()}catch{}
+   return json({complete:true,fileId:metadata.id||null,filename:metadata.name||null});
+  }
+  const details=(await response.text()).slice(0,200);
+  if(response.status===404||response.status===410)return error("Upload session expired, please restart.",410);
+  return error("Drive rejected upload chunk ("+response.status+"): "+details,502);
+ }
+ if(path==="/upload/status"&&req.method==="POST"){
+  const b=await readBody(req);
+  const payload=await unseal(b.uploadToken,env);
+  if(payload.purpose!=="upload")return error("Incorrect upload token.",403);
+  const response=await fetch(payload.sessionUrl,{method:"PUT",
+   headers:{"Authorization":"Bearer "+token,"Content-Range":"bytes */"+payload.size},
+   body:new Uint8Array(0),redirect:"manual"});
+  if(response.status===308){
+   const match=(response.headers.get("Range")||"").match(/bytes=0-(\d+)/);
+   return json({complete:false,nextOffset:match?Number(match[1])+1:0});
+  }
+  if(response.ok)return json({complete:true});
+  return error("Unable to resume this upload ("+response.status+").",response.status===404?410:502);
  }
  return error("No matching API route.",404);
 }
