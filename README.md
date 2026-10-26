@@ -12,7 +12,7 @@ The app code is ready for a Cloudflare **Pages** project connected to this repo:
 - Cloudflare project: `signals`
 - Build output: `public` (repository root, build command `exit 0`)
 - Backend: `functions/api/drive/[[path]].js`
-- Storage: private [Signals Workshops Google Drive folder](https://drive.google.com/drive/folders/1y1ULkovpDkJbMb2Iuix3cKAgUjP7uS6V)
+- Storage: private [Signals Workshops Google Drive folder](https://drive.google.com/drive/u/0/my-drive)
 
 The host can save presets containing up to **20 URLs**, create named sessions and close submissions. Students visit the same short URL, choose a workshop, open the tabs, and upload their project work to that workshop's active session. Large files use resumable **8 MiB** Drive upload chunks (default 10 GiB maximum per file, configurable).
 
