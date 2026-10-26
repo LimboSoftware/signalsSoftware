@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0c1524" />
+  <title>Workshop Launcher</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f0f5fd;background:#0c1524;font-synthesis:none}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 86% 6%,#203856 0,transparent 43%),radial-gradient(ellipse at 0% 100%,#11263c 0,transparent 52%),#0c1524}
+    .shell{max-width:930px;margin:auto;padding:32px 23px 80px}header{display:flex;align-items:center;gap:14px;margin-bottom:47px}.mark{width:43px;height:43px;border-radius:13px;background:#eac788;color:#122139;display:grid;place-items:center;font-size:22px;font-weight:900;box-shadow:0 8px 25px #0003}.brand{font-size:17px;font-weight:750;letter-spacing:-.45px}header small{font-size:12px;color:#a0b2cb;display:block;margin-top:3px}
+    h1{font-size:clamp(33px,5vw,55px);font-weight:750;letter-spacing:-2px;line-height:1.05;margin:0 0 13px}h2{font-size:20px;margin:0 0 8px;letter-spacing:-.5px}.sub{color:#a8b8d0;font-size:16px;line-height:1.6;margin:0 0 29px;max-width:610px}.section{background:#162337;border:1px solid #2d405a;border-radius:18px;padding:26px;margin-top:20px;box-shadow:0 15px 35px #060b1522}.section p{color:#aab9ce;line-height:1.6;margin:6px 0 20px}label{display:block;font-weight:650;font-size:12px;color:#c3d1e3;margin-bottom:7px;letter-spacing:.2px}input{width:100%;border:1px solid #3a4d68;background:#101b2d;border-radius:10px;color:#eff5ff;font-size:15px;padding:14px 15px;outline:none;min-width:0}input:focus{border-color:#efc982;box-shadow:0 0 0 3px #efc98220}input::placeholder{color:#697d98}.formrows{display:grid;gap:18px}.sitefields{display:grid;grid-template-columns:200px 1fr;gap:11px}.flex{display:flex;align-items:center;gap:11px;flex-wrap:wrap}.row-between{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}.btn{appearance:none;background:#efc982;color:#182438;border:0;border-radius:10px;padding:13px 18px;font-family:inherit;font-size:14px;font-weight:750;cursor:pointer;min-height:45px;transition:transform .08s,filter .15s}.btn:active{transform:translateY(1px)}.btn:hover{filter:brightness(1.06)}.btn.secondary{background:#293c55;color:#eef4fc;border:1px solid #455a75}.btn.ghost{background:transparent;color:#efc982;border:1px solid #8c714b}.btn:disabled{opacity:.45;cursor:wait}.btn.big{font-size:18px;min-height:58px;padding:17px 24px;width:100%}.split{display:grid;grid-template-columns:1fr 1fr;gap:20px}.muted{color:#93a8c3;font-size:13px}.hidden{display:none!important}.status{min-height:21px;font-size:13px;color:#b4d5c0;margin:15px 0 0}.status.error{color:#ffb9b1}.pill{color:#ead0a0;font-size:12px;background:#3a322c;border:1px solid #6f5940;padding:7px 12px;border-radius:100px;font-weight:650}.code{font-size:45px;font-weight:800;letter-spacing:8px;color:#f4ce8e;margin:12px 0 13px}.roomhint{font-size:13px;color:#9fb2ca}.large-input{font-size:24px;text-align:center;letter-spacing:5px;font-weight:750;text-transform:uppercase}
+    .list{margin:23px 0 26px;display:grid;gap:10px}.linkitem{background:#101b2c;border:1px solid #33465f;border-radius:11px;padding:14px 16px;display:flex;align-items:center;gap:12px;min-width:0}.number{display:grid;place-items:center;min-width:29px;height:29px;background:#364961;color:#f7dbab;border-radius:9px;font-weight:750}.linktext{flex:1;min-width:0}.linktitle{font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.linkurl{color:#90a5c0;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px}.textlink{color:#f2d39e;text-decoration:none;font-size:13px;font-weight:700}.top-alert{padding:13px 16px;border:1px solid #6b5263;border-radius:10px;background:#3b2a3c;color:#ffded6;font-size:13px;line-height:1.5;margin-top:15px}.foot{padding-top:26px;color:#7589a4;font-size:12px;line-height:1.6}.refresh{display:inline-block;width:8px;height:8px;background:#8ec8a7;border-radius:50%;margin-right:6px}.steps{color:#a7bad0;font-size:13px;line-height:1.7}.steps strong{color:#edf3fb}.eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;color:#e8c991;margin-bottom:12px}.view{animation:enter .17s ease-out}@keyframes enter{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}@media(max-width:680px){.shell{padding:24px 15px 50px}header{margin-bottom:32px}.split,.sitefields{grid-template-columns:1fr}.section{padding:19px}.code{font-size:37px}.sub{font-size:14px}.sitefields{gap:7px}.formrows{gap:19px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header><div class="mark">↗</div><div><div class="brand">Workshop Launcher</div><small>Open the same pages on every Mac</small></div></header>
+    <main>
+      <div id="home" class="view">
+        <div class="eyebrow">THE CLASSROOM, IN SYNC</div>
+        <h1>Three pages.<br>Every MacBook.</h1>
+        <p class="sub">Set up a workshop once. Students join with a six-character code and open the same websites in one click.</p>
+        <div class="split">
+          <section class="section"><h2>I'm the host</h2><p>Create a workshop, choose the three pages and share your room code.</p><button class="btn" id="create">Create workshop →</button></section>
+          <section class="section"><h2>I'm joining</h2><p>Already have a workshop code? Enter it below.</p><label for="joincode">Workshop code</label><div class="flex" style="flex-wrap:nowrap"><input id="joincode" maxlength="6" class="large-input" placeholder="ABC234" autocomplete="off"><button class="btn secondary" id="join">Join</button></div></section>
+        </div>
+        <p class="status" id="home-status" role="status"></p>
+      </div>
+      <div id="host" class="view hidden">
+        <div class="row-between"><div><div class="eyebrow">HOST CONTROL</div><h1>Your workshop</h1></div><span class="pill">Host mode</span></div>
+        <p class="sub">Set the pages your group should have open. Students will see changes automatically.</p>
+        <section class="section">
+          <div class="row-between"><div><label>ROOM CODE</label><div class="code" id="host-code"></div></div><div class="flex"><button class="btn secondary" id="copy-code">Copy code</button><button class="btn secondary" id="copy-link">Copy student link</button></div></div>
+          <label for="student-link">Student joining link</label><input id="student-link" readonly aria-label="Student joining link"><p class="roomhint">Give students this link, or ask them to visit this site and enter the code above. Keep your host link private.</p>
+        </section>
+        <section class="section">
+          <div class="row-between"><h2>Pages to open</h2><span class="muted">Up to 3 pages</span></div>
+          <p>Paste URLs below, or pull the first three website tabs from Chrome on this Mac.</p>
+          <div class="formrows" id="link-fields"></div>
+          <div class="flex" style="margin-top:22px"><button class="btn" id="save">Save & send to students</button><button class="btn ghost" id="copy-grabber">Copy Mac tab capture command</button></div>
+          <p class="status" id="host-status" role="status"></p>
+          <p class="steps">To capture open Chrome tabs: click <strong>Copy Mac tab capture command</strong>, open <strong>Terminal</strong> on this Mac, paste and press Return. Allow Terminal to control Chrome if asked. Your three Chrome URLs will fill in here; then press <strong>Save & send</strong>. This step is optional.</p>
+        </section>
+        <section class="section"><h2>Host preview</h2><p>Test the student launch here before the workshop begins.</p><div id="host-list" class="list"></div><button class="btn secondary" id="host-open">Open all pages on this Mac ↗</button><div id="host-pop-warning" class="top-alert hidden"></div></section>
+        <p class="foot">Tip: bookmark this host page so you can return and change URLs. Anyone with the student link can only view and launch; only your private host link can change them.</p>
+      </div>
+      <div id="student" class="view hidden">
+        <div class="row-between"><div><div class="eyebrow">YOU'RE CONNECTED</div><h1>Ready to launch?</h1></div><span class="pill" id="student-code"></span></div>
+        <p class="sub">These are the pages chosen by your workshop host. One button opens them in separate Chrome tabs.</p>
+        <section class="section"><div class="row-between"><h2>Your workshop pages</h2><span class="muted"><span class="refresh"></span>Checking for updates</span></div><div id="student-list" class="list"></div><button class="btn big" id="student-open">Open all workshop tabs ↗</button><p class="status" id="student-status" role="status"></p><div id="student-pop-warning" class="top-alert hidden"></div></section>
+        <p class="foot">Not your workshop? <a class="textlink" href="/">Join a different room</a>. Updates appear automatically, so you don't need to refresh.</p>
+      </div>
+    </main>
+  </div>
+  <script>
+  (() => {
+    'use strict';
+    const $ = id => document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+    const hash = new URLSearchParams(location.hash.slice(1));
+    let room = (params.get('room') || '').toUpperCase();
+    let key = hash.get('host') || '';
+    let currentLinks = [];
+    let revision = -1;
+    let hostDirty = false;
+    let pendingCapture = null;
+    const show = which => ['home','host','student'].forEach(name => $(name).classList.toggle('hidden', name !== which));
+    const message = (id, text, error = false) => { $(id).textContent = text; $(id).classList.toggle('error', error); };
+    const api = async (path, init) => { const response = await fetch('/api/' + path, {cache:'no-store', ...init}); let data; try { data = await response.json(); } catch { throw Error('Unable to reach the workshop service.'); } if (!response.ok) throw Error(data.error || 'Request failed.'); return data; };
+    const studentLink = () => location.origin + '/?room=' + encodeURIComponent(room);
+    const hostLink = () => studentLink() + '#host=' + encodeURIComponent(key);
+    const copy = async text => { try { await navigator.clipboard.writeText(text); } catch { const field = document.createElement('textarea'); field.value = text; field.style.position = 'fixed'; field.style.opacity = '0'; document.body.append(field); field.select(); const ok = document.execCommand('copy'); field.remove(); if (!ok) throw Error('Clipboard permission blocked.'); } };
+    const displayLinks = (target, links) => {
+      const box = $(target); box.replaceChildren();
+      if (!links.length) { const p = document.createElement('p'); p.textContent = 'No pages have been saved yet. Ask the host to add them.'; box.append(p); return; }
+      links.forEach((link, i) => {
+        const item = document.createElement('div'); item.className = 'linkitem';
+        const num = document.createElement('span'); num.className='number'; num.textContent=String(i+1);
+        const detail = document.createElement('div'); detail.className='linktext';
+        const title = document.createElement('div'); title.className='linktitle'; title.textContent=link.title;
+        const url = document.createElement('div'); url.className='linkurl'; url.textContent=link.url;
+        detail.append(title,url);
+        const a = document.createElement('a'); a.className='textlink'; a.href=link.url; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent='Open ↗';
+        item.append(num,detail,a);box.append(item);
+      });
+    };
+    const createFields = () => {
+      const fields = $('link-fields'); fields.replaceChildren();
+      for(let i=0;i<3;i++){
+        const item=document.createElement('div');
+        const label=document.createElement('label');label.textContent='PAGE '+(i+1);label.htmlFor='url-'+i;
+        const parts=document.createElement('div');parts.className='sitefields';
+        const title=document.createElement('input');title.placeholder='Page title (optional)';title.id='title-'+i;title.maxLength=80;
+        const url=document.createElement('input');url.placeholder='https://example.com';url.id='url-'+i;url.type='url';
+        [title,url].forEach(field=>field.addEventListener('input',()=>{hostDirty=true}));
+        parts.append(title,url);item.append(label,parts);fields.append(item);
+      }
+    };
+    const fillFields = links => {
+      for(let i=0;i<3;i++){ $('title-'+i).value=links[i]?.title||''; $('url-'+i).value=links[i]?.url||''; }
+      hostDirty=false;
+    };
+    const readFields = () => {
+      const links=[];
+      for(let i=0;i<3;i++){
+        const title=$('title-'+i).value.trim(); const url=$('url-'+i).value.trim();
+        if(title && !url) throw Error('Page '+(i+1)+' has a title but no URL.');
+        if(url){const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))throw Error('Page '+(i+1)+' must be a website link.');links.push({title:title||parsed.hostname,url:parsed.toString()});}
+      }
+      if(!links.length)throw Error('Add at least one website first.');
+      return links;
+    };
+    const openTabs = (links, warningId) => {
+      $(warningId).classList.add('hidden');
+      if(!links.length) return;
+      let blocked=0;
+      for(const item of links){
+        const win=window.open(item.url, '_blank');
+        if(!win) blocked++;
+        else try { win.opener=null; } catch {}
+      }
+      if(blocked){$(warningId).textContent=blocked+' tab(s) were blocked. Click the blocked pop-up icon in Chrome’s address bar, choose “Always allow pop-ups and redirects” from this workshop site, then press Open all again. You can also use the individual Open links above.';$(warningId).classList.remove('hidden');}
+    };
+    $('student-open').addEventListener('click',()=>openTabs(currentLinks,'student-pop-warning'));
+    $('host-open').addEventListener('click',()=>openTabs(currentLinks,'host-pop-warning'));
+    $('create').addEventListener('click',async()=>{
+      $('create').disabled=true;message('home-status','Creating your workshop…');
+      try { const result=await api('create',{method:'POST'});room=result.room;key=result.hostKey; history.replaceState(null,'',hostLink());await loadRoom(); }
+      catch(e){message('home-status',e.message,true)}finally{$('create').disabled=false;}
+    });
+    function join(){const code=$('joincode').value.trim().toUpperCase();if(!/^[A-Z2-9]{6}$/.test(code)){message('home-status','Enter the six-character workshop code.',true);return;}location.href='/?room='+encodeURIComponent(code);}
+    $('join').addEventListener('click',join);
+    $('joincode').addEventListener('keydown',e=>{if(e.key==='Enter')join()});
+    $('copy-code').addEventListener('click',async()=>{try{await copy(room);message('host-status','Room code copied.')}catch(e){message('host-status',e.message,true)}});
+    $('copy-link').addEventListener('click',async()=>{try{await copy(studentLink());message('host-status','Student link copied.')}catch(e){message('host-status',e.message,true)}});
+    $('save').addEventListener('click',async()=>{
+      $('save').disabled=true;
+      try{
+        const links=readFields();
+        const updated=await api('room/'+encodeURIComponent(room),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({hostKey:key,links})});
+        currentLinks=updated.links;displayLinks('host-list',currentLinks);hostDirty=false;
+        message('host-status','Saved! Students will see the updated pages automatically.');
+      }catch(e){message('host-status',e.message,true)}finally{$('save').disabled=false;}
+    });
+    $('copy-grabber').addEventListener('click',async()=>{
+      const origin=location.origin;
+      const script = 'var c=Application("Google Chrome");var w=c.windows();if(!w.length)throw Error("Open your workshop pages in Chrome first.");var u=w[0].tabs().map(function(t){return t.url()}).filter(function(s){return /^https?:\\/\\//.test(s)&&s.indexOf('+JSON.stringify(origin+'/')+')!==0}).slice(0,3);if(!u.length)throw Error("No website tabs found in the front Chrome window.");var target='+JSON.stringify(hostLink()+'&capture=')+'+encodeURIComponent(JSON.stringify(u));c.windows[0].tabs.push(new c.Tab());c.windows[0].tabs[c.windows[0].tabs.length-1].url=target;';
+      const cmd = "osascript -l JavaScript -e '" + script.replace(/'/g,"'\\''") + "'";
+      try{await copy(cmd);message('host-status','Command copied. Open Terminal, paste and press Return. Approve Chrome access if prompted.')}catch(e){message('host-status',e.message,true)}
+    });
+    async function loadRoom(){
+      try{
+        const data=await api('room/'+encodeURIComponent(room));
+        currentLinks=data.links;revision=data.revision;
+        if(key){
+          show('host');$('host-code').textContent=room;$('student-link').value=studentLink();createFields();fillFields(currentLinks);
+          if(pendingCapture){pendingCapture=pendingCapture.slice(0,3).filter(v=>typeof v==='string'&&/^https?:\/\//.test(v));fillFields(pendingCapture.map(url=>({url,title:''})));hostDirty=true;message('host-status','Captured Chrome tabs loaded. Click Save & send to students.');}
+          displayLinks('host-list',currentLinks);
+        }else{
+          show('student');$('student-code').textContent='ROOM '+room;displayLinks('student-list',currentLinks);
+          $('student-open').disabled=!currentLinks.length;
+          message('student-status',currentLinks.length?'All set. Your host can update these pages at any time.':'Waiting for your host to add the pages…');
+        }
+      }catch(e){show('home');message('home-status',e.message,true);room='';key='';}
+    }
+    async function poll(){
+      if(!room || key || document.hidden)return;
+      try{
+        const data=await api('room/'+encodeURIComponent(room));
+        if(data.revision!==revision){revision=data.revision;currentLinks=data.links;displayLinks('student-list',currentLinks);$('student-open').disabled=!currentLinks.length;message('student-status',currentLinks.length?'Your host’s latest pages are ready.':'Waiting for your host to add the pages…');}
+      }catch(e){message('student-status','Connection interrupted. Retrying…',true)}
+    }
+    if(room){
+      if(key && hash.has('capture')){
+        try {const arr=JSON.parse(hash.get('capture'));if(Array.isArray(arr))pendingCapture=arr;}catch{}
+        history.replaceState(null,'',hostLink());
+      }
+      loadRoom();
+    }else show('home');
+    setInterval(poll, 7000);
+  })();
+  </script>
+</body>
+</html>
