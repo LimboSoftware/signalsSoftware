@@ -1,5 +1,9 @@
 # Workshop Tab Launcher
 
+## Open the workshop launcher
+
+**[Launch the workshop website](https://limbosoftware.github.io/signalsSoftware/)** — this is the actual app, not the GitHub repository page. Enter three URLs, generate a student link, then open the link on each MacBook.
+
 A host chooses up to three workshop URLs; students on other MacBooks join a shared room with a six-character code. The **Open all workshop tabs** button opens the same websites. Student pages poll for updates every seven seconds.
 
 This repository is independent of Tabletop Voice, ArmyTag and other tabletop projects.
