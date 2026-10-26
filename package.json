@@ -1,0 +1,9 @@
+{
+  "name": "signals-workshop-hub",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check public/workshop.js && node --check functions/api/drive/[[path]].js && node --check scripts/authorize-drive.mjs"
+  }
+}
