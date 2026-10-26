@@ -2,176 +2,260 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Workshop Tab Launcher — GitHub Pages Test</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0c1524">
+<title>Workshop Tab Launcher</title>
 <style>
     :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f0f5fd;background:#0c1524;font-synthesis:none}
     *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 86% 6%,#203856 0,transparent 43%),radial-gradient(ellipse at 0% 100%,#11263c 0,transparent 52%),#0c1524}
     .shell{max-width:930px;margin:auto;padding:32px 23px 80px}header{display:flex;align-items:center;gap:14px;margin-bottom:47px}.mark{width:43px;height:43px;border-radius:13px;background:#eac788;color:#122139;display:grid;place-items:center;font-size:22px;font-weight:900;box-shadow:0 8px 25px #0003}.brand{font-size:17px;font-weight:750;letter-spacing:-.45px}header small{font-size:12px;color:#a0b2cb;display:block;margin-top:3px}
     h1{font-size:clamp(33px,5vw,55px);font-weight:750;letter-spacing:-2px;line-height:1.05;margin:0 0 13px}h2{font-size:20px;margin:0 0 8px;letter-spacing:-.5px}.sub{color:#a8b8d0;font-size:16px;line-height:1.6;margin:0 0 29px;max-width:610px}.section{background:#162337;border:1px solid #2d405a;border-radius:18px;padding:26px;margin-top:20px;box-shadow:0 15px 35px #060b1522}.section p{color:#aab9ce;line-height:1.6;margin:6px 0 20px}label{display:block;font-weight:650;font-size:12px;color:#c3d1e3;margin-bottom:7px;letter-spacing:.2px}input{width:100%;border:1px solid #3a4d68;background:#101b2d;border-radius:10px;color:#eff5ff;font-size:15px;padding:14px 15px;outline:none;min-width:0}input:focus{border-color:#efc982;box-shadow:0 0 0 3px #efc98220}input::placeholder{color:#697d98}.formrows{display:grid;gap:18px}.sitefields{display:grid;grid-template-columns:200px 1fr;gap:11px}.flex{display:flex;align-items:center;gap:11px;flex-wrap:wrap}.row-between{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}.btn{appearance:none;background:#efc982;color:#182438;border:0;border-radius:10px;padding:13px 18px;font-family:inherit;font-size:14px;font-weight:750;cursor:pointer;min-height:45px;transition:transform .08s,filter .15s}.btn:active{transform:translateY(1px)}.btn:hover{filter:brightness(1.06)}.btn.secondary{background:#293c55;color:#eef4fc;border:1px solid #455a75}.btn.ghost{background:transparent;color:#efc982;border:1px solid #8c714b}.btn:disabled{opacity:.45;cursor:wait}.btn.big{font-size:18px;min-height:58px;padding:17px 24px;width:100%}.split{display:grid;grid-template-columns:1fr 1fr;gap:20px}.muted{color:#93a8c3;font-size:13px}.hidden{display:none!important}.status{min-height:21px;font-size:13px;color:#b4d5c0;margin:15px 0 0}.status.error{color:#ffb9b1}.pill{color:#ead0a0;font-size:12px;background:#3a322c;border:1px solid #6f5940;padding:7px 12px;border-radius:100px;font-weight:650}.code{font-size:45px;font-weight:800;letter-spacing:8px;color:#f4ce8e;margin:12px 0 13px}.roomhint{font-size:13px;color:#9fb2ca}.large-input{font-size:24px;text-align:center;letter-spacing:5px;font-weight:750;text-transform:uppercase}
     .list{margin:23px 0 26px;display:grid;gap:10px}.linkitem{background:#101b2c;border:1px solid #33465f;border-radius:11px;padding:14px 16px;display:flex;align-items:center;gap:12px;min-width:0}.number{display:grid;place-items:center;min-width:29px;height:29px;background:#364961;color:#f7dbab;border-radius:9px;font-weight:750}.linktext{flex:1;min-width:0}.linktitle{font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.linkurl{color:#90a5c0;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px}.textlink{color:#f2d39e;text-decoration:none;font-size:13px;font-weight:700}.top-alert{padding:13px 16px;border:1px solid #6b5263;border-radius:10px;background:#3b2a3c;color:#ffded6;font-size:13px;line-height:1.5;margin-top:15px}.foot{padding-top:26px;color:#7589a4;font-size:12px;line-height:1.6}.refresh{display:inline-block;width:8px;height:8px;background:#8ec8a7;border-radius:50%;margin-right:6px}.steps{color:#a7bad0;font-size:13px;line-height:1.7}.steps strong{color:#edf3fb}.eyebrow{font-size:12px;font-weight:800;letter-spacing:2px;color:#e8c991;margin-bottom:12px}.view{animation:enter .17s ease-out}@keyframes enter{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:none}}@media(max-width:680px){.shell{padding:24px 15px 50px}header{margin-bottom:32px}.split,.sitefields{grid-template-columns:1fr}.section{padding:19px}.code{font-size:37px}.sub{font-size:14px}.sitefields{gap:7px}.formrows{gap:19px}}
-  </style>
+  
+    .hero-controls{display:flex;gap:11px;flex-wrap:wrap;margin:0 0 24px}
+    .preset-card{background:#14253a;border:1px solid #354962;border-radius:14px;padding:20px;display:flex;gap:18px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+    .preset-card:hover{border-color:#6e829d}
+    .preset-title{font-weight:750;font-size:19px;letter-spacing:-.3px}
+    .preset-meta{font-size:13px;color:#9fb1c8;margin-top:7px;line-height:1.4}
+    .preset-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .preset-actions .btn{white-space:nowrap}
+    .tiny-button{padding:9px 11px;min-height:39px;font-size:12px}
+    .tab-editor{padding:14px 0;border-top:1px solid #344760}
+    .tab-editor:first-child{border-top:0}
+    .tab-edit-top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:9px}
+    .subtle{font-size:12px;color:#8ca5c1}
+    .empty{border:1px dashed #49607d;border-radius:14px;padding:27px;color:#bbcade;line-height:1.7;margin-top:13px}
+    .edit-control{display:grid;grid-template-columns:minmax(110px,.7fr) minmax(220px,2fr);gap:10px}
+    @media(max-width:640px){.edit-control{grid-template-columns:1fr}.preset-card{align-items:stretch}.preset-actions{width:100%}.preset-actions .btn{flex:1}}
+</style>
 </head>
 <body>
 <div class="shell">
-<header><div class="mark">↗</div><div><div class="brand">Workshop Launcher</div><small>GitHub Pages test — no login or installation</small></div></header>
+<header><div class="mark">↗</div><div><div class="brand">Workshop Tab Launcher</div><small>Shared workshop presets — powered by GitHub Pages</small></div></header>
 <main>
-<section id="host" class="view">
-<div class="eyebrow">WORKSHOP HOST</div>
-<h1>Three pages.<br>Every MacBook.</h1>
-<p class="sub">Add up to three website links, copy one student link and open those same pages on every workshop MacBook.</p>
+<section id="student" class="view">
+<div class="eyebrow">FOR EVERY WORKSHOP MACBOOK</div>
+<h1>One click.<br>Every tab.</h1>
+<p class="sub">Find your workshop below. One button opens all the websites selected by your host — no long links, room codes or accounts needed.</p>
+<div class="hero-controls">
+<button id="refresh" class="btn secondary">↻ Refresh workshop presets</button>
+<button id="host-switch" class="btn ghost">I'm the host — set up a preset</button>
+</div>
 <div class="section">
-<h2>Choose your pages</h2>
-<p>Paste the website URLs below, or capture the first three open Chrome tabs using the optional Mac helper.</p>
-<label for="workshop">Workshop title</label><input id="workshop" maxlength="80" value="My workshop" placeholder="My workshop">
-<div id="fields" class="formrows" style="margin-top:23px"></div>
-<div class="flex" style="margin-top:24px">
-<button id="generate" class="btn">Create student link ↗</button>
-<button id="capture" class="btn secondary">Copy Chrome tab capture command</button>
+<div class="row-between"><h2>Available workshops</h2><span class="muted" id="preset-count">Loading…</span></div>
+<p class="muted">Select your workshop and press <strong>Open all tabs</strong>. If Chrome asks to allow pop-ups, approve this website once.</p>
+<div id="presets"></div>
+<p class="status" id="student-status" role="status"></p>
+<div id="student-warning" class="top-alert hidden">Chrome blocked one or more tabs. Click the pop-up blocked icon in the Chrome address bar and choose to always allow pop-ups from this site. Then press Open all tabs again.</div>
+</div>
+<p class="foot">The same short address works on every student MacBook: <strong id="public-url"></strong>. Presets are published by the workshop host and become available after GitHub Pages updates.</p>
+</section>
+<section id="host" class="view hidden">
+<div class="row-between"><div><div class="eyebrow">WORKSHOP HOST</div><h1>Build a preset.</h1></div><button id="back" class="btn secondary">← Student homepage</button></div>
+<p class="sub">Choose up to 20 pages. Publish the preset once and all MacBooks can open it from the main launcher page, without a unique link for each student.</p>
+<div class="section">
+<label for="preset-name">Preset / workshop name</label>
+<input id="preset-name" maxlength="80" placeholder="e.g. Harwich creative technology workshop">
+<p class="steps">Reusing an existing preset name replaces its links. Your draft is saved automatically in this browser.</p>
+<div class="row-between" style="margin-top:28px;margin-bottom:11px"><h2>Tabs to open</h2><span class="muted" id="tab-count">0 / 20 tabs</span></div>
+<div id="editor"></div>
+<div class="flex" style="margin-top:15px">
+<button id="add-tab" class="btn secondary">+ Add another tab</button>
+<button id="capture" class="btn ghost">Copy all Chrome tabs from host Mac</button>
+</div>
+<p class="steps">Optional Chrome capture: copy the command, paste into Mac Terminal and press Return. Approve Chrome automation access if macOS asks. It will import up to 20 website tabs from your front Chrome window.</p>
+<div class="divider"></div>
+<div class="flex">
+<button id="publish" class="btn">Publish preset to GitHub ↗</button>
+<button id="test" class="btn secondary">Test opening tabs here ↗</button>
 </div>
 <p class="status" id="host-status" role="status"></p>
-<div id="share" class="hidden" style="margin-top:20px;padding-top:20px;border-top:1px solid #34445a">
-<label for="share-url">Link for all workshop MacBooks</label>
-<input id="share-url" readonly>
-<div class="flex" style="margin-top:13px">
-<button class="btn" id="copy">Copy student link</button>
-<button class="btn secondary" id="preview">Preview student view</button>
-</div>
-<p class="steps">If you edit the websites, press Create student link again and share the new link. This test version doesn't update students' pages automatically.</p>
-</div>
+<div id="host-warning" class="top-alert hidden"></div>
 </div>
 <div class="section">
-<h2>Want to copy existing Chrome tabs?</h2>
-<p class="steps">On the host Mac, open the three sites in the front Chrome window. Click <strong>Copy Chrome tab capture command</strong>, paste into <strong>Terminal</strong> and press Return. Allow access to Chrome if prompted. It will open this page with the URLs filled in, ready for you to create a student link.</p>
+<h2>How publishing works</h2>
+<p class="steps">Press <strong>Publish preset to GitHub</strong>. You'll see a new GitHub Issue with your preset already filled in. Sign in as the repository owner and press <strong>Create</strong> on GitHub. The repository automatically publishes the preset onto this homepage. Students never need GitHub accounts. It may take a short while for GitHub Pages to rebuild.</p>
+<p class="steps">For changes, publish the same preset name again. This updates the button on the student homepage.</p>
+<div class="flex"><button id="copy-home" class="btn secondary">Copy student homepage address</button></div>
 </div>
-<p class="foot">This GitHub Pages version stores your draft URLs in your browser and encodes them in the student link. Do not include confidential links or passwords in the URLs.</p>
-</section>
-<section id="student" class="view hidden">
-<div class="row-between"><div><div class="eyebrow">STUDENT WORKSTATION</div><h1 id="student-title">Ready to launch?</h1></div><span class="pill">Workshop</span></div>
-<p class="sub">These are the pages chosen by your workshop host. Click once to open them in Chrome tabs.</p>
-<div class="section">
-<div class="row-between"><h2>Workshop pages</h2><span class="muted">Shared by your host</span></div>
-<div id="student-list" class="list"></div>
-<button id="open-all" class="btn big">Open all workshop tabs ↗</button>
-<p class="status" id="student-status" role="status"></p>
-<div id="pop-tip" class="top-alert hidden">Chrome may block extra tabs. Click the blocked pop-up icon at the right of Chrome's address bar, allow pop-ups for this GitHub Pages site, and try again. You can also use the individual Open links above.</div>
-</div>
-<p class="foot">Changes aren't live in this test. If your host changes a website, they need to share a fresh student link. <a href="./" style="color:#f2d39e">Return to host setup</a>.</p>
+<p class="foot">This is a public GitHub Pages site. Workshop names and website URLs are public. Do not add links containing private tokens or sign-in credentials. Other GitHub users cannot publish a preset to the live catalogue.</p>
 </section>
 </main>
 </div>
 <script>
 (() => {
-"use strict";
-const $ = id => document.getElementById(id);
-const root=location.origin+location.pathname;
-const params=new URLSearchParams(location.search);
-const KEY="workshop-static-settings-v1";
-let current=[];
-let link="";
-const message=(id,str,error=false)=>{const el=$(id);el.textContent=str;el.classList.toggle("error",error);};
-function website(raw){
- if(typeof raw!=="string"||raw.length>2048)throw Error("Each URL must have fewer than 2,049 characters.");
- let u;try{u=new URL(raw.trim());}catch{throw Error("Enter a full URL starting with https://.");}
- if(!["http:","https:"].includes(u.protocol)||!u.hostname||u.username||u.password)throw Error("Only normal http or https website links are supported.");
+'use strict';
+const $=id=>document.getElementById(id);
+const LIMIT=20;
+const STORAGE='workshop-shared-host-draft-v2';
+const SITE=location.origin+location.pathname;
+const REPO='LimboSoftware/signalsSoftware';
+const bySlug=new Map();
+let draft={name:'',links:[{title:'',url:''},{title:'',url:''},{title:'',url:''}]};
+function status(id,content,error=false){$(id).textContent=content;$(id).classList.toggle('error',error);}
+function showHost(){ $('student').classList.add('hidden');$('host').classList.remove('hidden');window.scrollTo(0,0);}
+function showStudent(){ $('host').classList.add('hidden');$('student').classList.remove('hidden');window.scrollTo(0,0);refresh();}
+function validUrl(raw){
+ if(typeof raw!=='string'||raw.length>2048)throw Error('URLs must be no more than 2,048 characters.');
+ let u;try{u=new URL(raw.trim());}catch{throw Error('Please enter complete website URLs beginning https://');}
+ if(!['https:','http:'].includes(u.protocol)||!u.hostname||u.username||u.password)throw Error('Only ordinary http and https website URLs are allowed.');
  return u.toString();
 }
-function validate(input){
- if(!input||typeof input!=="object"||!Array.isArray(input.links)||input.links.length<1||input.links.length>3)throw Error("Invalid workshop link.");
- return {name:String(input.name||"Workshop").slice(0,80),links:input.links.map((x,i)=>({title:String(x.title||"Page "+(i+1)).slice(0,80),url:website(x.url)}))};
-}
-function save(){
- const values=[];for(let i=0;i<3;i++)values.push({title:$("title-"+i).value,url:$("url-"+i).value});
- try{localStorage.setItem(KEY,JSON.stringify({name:$("workshop").value,values}));}catch{}
- $("share").classList.add("hidden");
-}
-function fields(){
- const box=$("fields");
- for(let i=0;i<3;i++){
-  const group=document.createElement("div");
-  const lbl=document.createElement("label");lbl.textContent="PAGE "+(i+1);
-  const grid=document.createElement("div");grid.className="sitefields";
-  const name=document.createElement("input");name.id="title-"+i;name.placeholder="Page name (optional)";name.maxLength=80;name.setAttribute("aria-label","Page "+(i+1)+" name");
-  const url=document.createElement("input");url.id="url-"+i;url.type="url";url.placeholder="https://example.com";url.setAttribute("aria-label","Page "+(i+1)+" website URL");
-  name.addEventListener("input",save);url.addEventListener("input",save);
-  grid.append(name,url);group.append(lbl,grid);box.append(group);
- }
- $("workshop").addEventListener("input",save);
- try{
-  const old=JSON.parse(localStorage.getItem(KEY)||"null");
-  if(old&&Array.isArray(old.values)){
-   $("workshop").value=String(old.name||"My workshop").slice(0,80);
-   old.values.slice(0,3).forEach((x,i)=>{$("title-"+i).value=String(x.title||"").slice(0,80);$("url-"+i).value=String(x.url||"");});
-  }
- }catch{}
-}
-function build(){
- try{
-  const all=[];
-  for(let i=0;i<3;i++){
-   const raw=$("url-"+i).value.trim();const title=$("title-"+i).value.trim();
-   if(title&&!raw)throw Error("Page "+(i+1)+" has a name but no URL.");
-   if(raw)all.push({url:website(raw),title:title||"Page "+(i+1)});
-  }
-  const data=validate({name:$("workshop").value.trim()||"My workshop",links:all});
-  const out=new URL(root);out.searchParams.set("launch",JSON.stringify(data));
-  if(out.href.length>12000)throw Error("The student link is too long. Try shorter page URLs.");
-  link=out.href;$("share-url").value=link;$("share").classList.remove("hidden");
-  message("host-status","Student link ready to copy.");
- }catch(e){$("share").classList.add("hidden");message("host-status",e.message,true);}
-}
-async function copyText(text){
- try{await navigator.clipboard.writeText(text);}
- catch{
-  const area=document.createElement("textarea");area.value=text;area.style.position="fixed";area.style.opacity="0";
-  document.body.append(area);area.select();const ok=document.execCommand("copy");area.remove();
-  if(!ok)throw Error("Browser blocked clipboard access.");
- }
-}
-function draw(data){
- $("host").classList.add("hidden");$("student").classList.remove("hidden");
- $("student-title").textContent=data.name||"Your workshop";
- current=data.links;
- const box=$("student-list");box.replaceChildren();
- current.forEach((x,i)=>{
-  const item=document.createElement("div");item.className="linkitem";
-  const num=document.createElement("span");num.className="number";num.textContent=String(i+1);
-  const detail=document.createElement("div");detail.className="linktext";
-  const title=document.createElement("div");title.className="linktitle";title.textContent=x.title;
-  const url=document.createElement("div");url.className="linkurl";url.textContent=x.url;
-  detail.append(title,url);
-  const a=document.createElement("a");a.href=x.url;a.target="_blank";a.rel="noopener noreferrer";a.className="textlink";a.textContent="Open ↗";
-  item.append(num,detail,a);box.append(item);
+function cleanPreset(obj){
+ if(!obj||typeof obj!=='object'||!Array.isArray(obj.links)||obj.links.length<1||obj.links.length>LIMIT)throw Error('Preset must contain between 1 and 20 tabs.');
+ const name=String(obj.name||'').trim().slice(0,80);
+ if(!name)throw Error('Enter a name for this workshop preset.');
+ const links=obj.links.map((x,i)=>{
+  if(!x||typeof x.url!=='string')throw Error('Tab '+(i+1)+' has no URL.');
+  return {title:String(x.title||'').trim().slice(0,80)||'Page '+(i+1),url:validUrl(x.url)};
  });
- $("open-all").textContent="Open "+current.length+" workshop tab"+(current.length===1?"":"s")+" ↗";
+ return {name,links};
 }
-$("generate").addEventListener("click",build);
-$("copy").addEventListener("click",async()=>{try{await copyText(link);message("host-status","Student link copied.");}catch(e){message("host-status",e.message,true);}});
-$("preview").addEventListener("click",()=>{if(link)window.open(link,"_blank");});
-$("open-all").addEventListener("click",()=>{
+function persist(){
+ try{localStorage.setItem(STORAGE,JSON.stringify(draft));}catch{}
+ $('host-warning').classList.add('hidden');
+}
+function pullValues(){
+ draft.name=$('preset-name').value;
+ draft.links=[...$('editor').children].map(row=>({title:row.querySelector('.edit-title').value,url:row.querySelector('.edit-url').value}));
+ persist();
+}
+function addRow(info){
+ if($('editor').children.length>=LIMIT)return;
+ const row=document.createElement('div');row.className='tab-editor';
+ const head=document.createElement('div');head.className='tab-edit-top';
+ const label=document.createElement('label');label.textContent='TAB '+($('editor').children.length+1);
+ const remove=document.createElement('button');remove.type='button';remove.className='btn secondary tiny-button';remove.textContent='Remove';remove.setAttribute('aria-label','Remove tab');
+ remove.addEventListener('click',()=>{row.remove();renumber();pullValues();});
+ head.append(label,remove);
+ const fields=document.createElement('div');fields.className='edit-control';
+ const title=document.createElement('input');title.className='edit-title';title.placeholder='Page name (optional)';title.value=String(info?.title||'').slice(0,80);title.maxLength=80;title.setAttribute('aria-label','Page title');
+ const url=document.createElement('input');url.className='edit-url';url.type='url';url.placeholder='https://example.com';url.value=String(info?.url||'');url.setAttribute('aria-label','Website URL');
+ title.addEventListener('input',pullValues);url.addEventListener('input',pullValues);
+ fields.append(title,url);row.append(head,fields);$('editor').append(row);renumber();
+}
+function renumber(){
+ const rows=[...$('editor').children];rows.forEach((row,i)=>row.querySelector('label').textContent='TAB '+(i+1));
+ $('tab-count').textContent=rows.length+' / '+LIMIT+' tabs';$('add-tab').disabled=rows.length>=LIMIT;
+}
+function fill(){
+ $('preset-name').value=draft.name||'';
+ $('editor').replaceChildren();
+ (draft.links?.length?draft.links:[{title:'',url:''}]).slice(0,LIMIT).forEach(addRow);
+}
+function collect(){
+ pullValues();
+ const links=[];
+ for(let i=0;i<draft.links.length;i++){
+  const p=draft.links[i];const url=String(p.url||'').trim();const title=String(p.title||'').trim();
+  if(!url){if(title)throw Error('Tab '+(i+1)+' needs a URL.');continue;}
+  links.push({title:title||'Page '+(i+1),url:validUrl(url)});
+ }
+ return cleanPreset({name:draft.name,links});
+}
+function openTabs(links,warningId,statusId){
+ $(warningId).classList.add('hidden');
  let blocked=0;
- for(const x of current){const w=window.open(x.url,"_blank");if(w){try{w.opener=null;}catch{}}else blocked++;}
- $("pop-tip").classList.toggle("hidden",blocked===0);
- message("student-status",blocked?"Some tabs were blocked. See the help below.":"Requested "+current.length+" tab"+(current.length===1?"":"s")+".");
-});
-$("capture").addEventListener("click",async()=>{
- const code='var c=Application("Google Chrome");var w=c.windows();if(!w.length)throw Error("Open Chrome first.");var a=w[0].tabs().map(function(t){return t.url()}).filter(function(u){return (u.indexOf("https://")===0||u.indexOf("http://")===0)&&u.indexOf('+JSON.stringify(root)+')!==0;}).slice(0,3);if(!a.length)throw Error("No website tabs found.");var target='+JSON.stringify(root+"?import=")+'+encodeURIComponent(JSON.stringify(a));c.windows[0].tabs.push(new c.Tab({url:target}));';
- const command="osascript -l JavaScript -e '"+code.replace(/'/g,"'\''")+"'";
- try{await copyText(command);message("host-status","Mac capture command copied. Paste into Terminal on the host Mac.");}catch(e){message("host-status",e.message,true);}
-});
-fields();
-if(params.has("launch")){
- try{draw(validate(JSON.parse(params.get("launch"))));}
- catch(e){message("host-status","Invalid student link: "+e.message,true);}
-}else if(params.has("import")){
- try{
-  const arr=JSON.parse(params.get("import"));
-  if(!Array.isArray(arr)||!arr.length)throw Error("No Chrome tabs to import.");
-  arr.slice(0,3).forEach((u,i)=>{$("url-"+i).value=website(u);$("title-"+i).value="";});
-  save();message("host-status","Chrome tabs imported. Press Create student link.");
- }catch(e){message("host-status","Import failed: "+e.message,true);}
- history.replaceState(null,"",root);
+ for(const x of links){
+  const win=window.open(x.url,'_blank');
+  if(!win)blocked++; else try{win.opener=null;}catch{}
+ }
+ if(blocked)$(warningId).classList.remove('hidden');
+ if(statusId)status(statusId,blocked?'Some tabs were blocked; check Chrome pop-up settings.':'Requested '+links.length+' tabs.',blocked>0);
 }
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function downloadBookmarks(p){
+ const lines=['<!DOCTYPE NETSCAPE-Bookmark-file-1>','<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">','<TITLE>'+escapeHtml(p.name)+'</TITLE>','<H1>'+escapeHtml(p.name)+'</H1>','<DL><p>'];
+ for(const item of p.links)lines.push('<DT><A HREF="'+escapeHtml(item.url)+'">'+escapeHtml(item.title)+'</A>');
+ lines.push('</DL><p>');
+ const url=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/html;charset=utf-8'}));
+ const a=document.createElement('a');a.href=url;a.download=(p.slug||'workshop')+'-bookmarks.html';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function displayPreset(p){
+ const card=document.createElement('div');card.className='preset-card';
+ const info=document.createElement('div');
+ const title=document.createElement('div');title.className='preset-title';title.textContent=p.name;
+ const meta=document.createElement('div');meta.className='preset-meta';meta.textContent=p.links.length+' tab'+(p.links.length===1?'':'s')+' to open';
+ info.append(title,meta);
+ const actions=document.createElement('div');actions.className='preset-actions';
+ const open=document.createElement('button');open.className='btn';open.textContent='Open all tabs ↗';
+ open.addEventListener('click',()=>openTabs(p.links,'student-warning','student-status'));
+ const download=document.createElement('button');download.className='btn secondary';download.textContent='Download bookmarks';
+ download.addEventListener('click',()=>downloadBookmarks(p));
+ const edit=document.createElement('button');edit.className='btn ghost tiny-button';edit.textContent='Edit as host';
+ edit.addEventListener('click',()=>{draft={name:p.name,links:p.links.map(x=>({...x}))};persist();fill();showHost();status('host-status','Preset loaded. Change the tabs, then publish using the same name.');});
+ actions.append(open,download,edit);card.append(info,actions);
+ return card;
+}
+async function refresh(){
+ $('refresh').disabled=true;$('preset-count').textContent='Loading…';
+ try{
+  const response=await fetch('./presets/index.json?revision='+Date.now(),{cache:'no-store'});
+  if(!response.ok)throw Error('Could not load preset catalogue (HTTP '+response.status+').');
+  const data=await response.json();
+  if(!Array.isArray(data.presets))throw Error('Preset catalogue has an unexpected format.');
+  const box=$('presets');box.replaceChildren();bySlug.clear();let count=0;
+  for(const item of data.presets){
+   try{
+    const p=cleanPreset(item);p.slug=String(item.slug||'workshop');bySlug.set(p.slug,p);
+    box.append(displayPreset(p));count++;
+   }catch{}
+  }
+  if(!count){const empty=document.createElement('div');empty.className='empty';empty.textContent='No workshop presets published yet. Use “I’m the host” to add your first one. After publishing it on GitHub, it appears here for all MacBooks.';box.append(empty);}
+  $('preset-count').textContent=count+' preset'+(count===1?'':'s');
+  status('student-status',count?'Choose your workshop above.':'Ready for the host to publish the first preset.');
+ }catch(e){
+  $('preset-count').textContent='Unavailable';
+  status('student-status','Could not load presets: '+e.message,true);
+ }finally{$('refresh').disabled=false;}
+}
+async function copyText(s){
+ try{await navigator.clipboard.writeText(s);}
+ catch{const area=document.createElement('textarea');area.value=s;area.style.position='fixed';area.style.opacity='0';document.body.append(area);area.select();const success=document.execCommand('copy');area.remove();if(!success)throw Error('Clipboard access was blocked.');}
+}
+$('refresh').addEventListener('click',refresh);
+$('host-switch').addEventListener('click',showHost);
+$('back').addEventListener('click',showStudent);
+$('preset-name').addEventListener('input',pullValues);
+$('add-tab').addEventListener('click',()=>{addRow({title:'',url:''});pullValues();$('editor').lastElementChild.querySelector('.edit-url').focus();});
+$('publish').addEventListener('click',()=>{
+ try{
+  const data=collect();
+  const body='<!-- WORKSHOP_PRESET_V1 -->\n'+'\x60\x60\x60json\n'+JSON.stringify({version:1,...data},null,2)+'\n\x60\x60\x60\n\nPreset published from Workshop Tab Launcher. This issue triggers automatic publication to GitHub Pages.';
+  const issue=new URL('https://github.com/'+REPO+'/issues/new');
+  issue.searchParams.set('title','Workshop preset: '+data.name);
+  issue.searchParams.set('body',body);
+  if(issue.href.length>12000)throw Error('Preset is too large for GitHub issue prefill. Shorten some URLs or create smaller presets.');
+  status('host-status','Your GitHub draft is ready. Click Create on the GitHub page to publish it.');
+  const a=document.createElement('a');a.href=issue.href;a.target='_blank';a.rel='noopener noreferrer';a.click();
+  const warn=$('host-warning');warn.textContent='GitHub should open with the preset prefilled. Sign in as LimboSoftware and click Create to publish it. Then return here and refresh presets on the student homepage. If GitHub was blocked, allow the new tab or try again.';warn.classList.remove('hidden');
+ }catch(e){status('host-status',e.message,true);}
+});
+$('test').addEventListener('click',()=>{try{openTabs(collect().links,'host-warning','host-status');}catch(e){status('host-status',e.message,true);}});
+$('copy-home').addEventListener('click',async()=>{try{await copyText(SITE);status('host-status','Student homepage address copied.');}catch(e){status('host-status',e.message,true);}});
+$('capture').addEventListener('click',async()=>{
+ const script='var c=Application("Google Chrome");var w=c.windows();if(!w.length)throw Error("Open Chrome first.");var links=w[0].tabs().map(function(t){return t.url()}).filter(function(u){return (u.indexOf("https://")===0||u.indexOf("http://")===0)&&u.indexOf('+JSON.stringify(SITE)+')!==0;}).slice(0,20);if(!links.length)throw Error("No website tabs found in the front Chrome window.");var target='+JSON.stringify(SITE+'?import=')+'+encodeURIComponent(JSON.stringify(links));c.windows[0].tabs.push(new c.Tab({url:target}));';
+ const command="osascript -l JavaScript -e '"+script.replace(/'/g,"'\\''")+"'";
+ try{await copyText(command);status('host-status','Mac command copied. Paste into Terminal, then press Return.');}catch(e){status('host-status',e.message,true);}
+});
+try{
+ const prev=JSON.parse(localStorage.getItem(STORAGE)||'null');
+ if(prev&&Array.isArray(prev.links)){draft={name:String(prev.name||''),links:prev.links.slice(0,LIMIT)};}
+}catch{}
+fill();
+const query=new URLSearchParams(location.search);
+if(query.has('import')){
+ try{
+  const links=JSON.parse(query.get('import'));
+  if(!Array.isArray(links)||!links.length)throw Error('The import was empty.');
+  draft.links=links.slice(0,LIMIT).map(url=>({title:'',url:validUrl(url)}));persist();fill();showHost();
+  status('host-status','Chrome tabs imported. Give the preset a name and publish it.');
+ }catch(e){showHost();status('host-status','Import failed: '+e.message,true);}
+ history.replaceState(null,'',SITE);
+}
+$('public-url').textContent=SITE;
+refresh();
 })();
 </script>
-</body></html>
+</body>
+</html>
