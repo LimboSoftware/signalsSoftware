@@ -1,0 +1,37 @@
+name: Deploy workshop launcher to Cloudflare
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: ${{ vars.D1_DATABASE_ID != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inject D1 database ID into build-only configuration
+        env:
+          D1_DATABASE_ID: ${{ vars.D1_DATABASE_ID }}
+        run: |
+          node -e 'const fs=require("node:fs"); const p="wrangler.jsonc"; const cfg=JSON.parse(fs.readFileSync(p,"utf8")); cfg.d1_databases[0].database_id=process.env.D1_DATABASE_ID; fs.writeFileSync(p,JSON.stringify(cfg,null,2));'
+      - name: Initialise room database
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx --yes wrangler@4 d1 execute workshop-tab-launcher-db --remote --file=./schema.sql
+      - name: Deploy Worker and frontend
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4'
